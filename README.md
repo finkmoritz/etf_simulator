@@ -15,3 +15,7 @@ Get the full list of available parameters:
 ```
 python etf_simulator.py --help
 ```
+
+## Output
+
+![Output](https://github.com/finkmoritz/etf_simulator/blob/master/output.png)
