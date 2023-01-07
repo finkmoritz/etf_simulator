@@ -5,22 +5,22 @@ import random
 
 def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savigns_rate_increase):
     capital_per_year = []
-    capital_per_year.append(capital_start)
+    capital_absolute = capital_start
     annual_savings_rate = annual_savings_rate_start
+    inflation_total = 1.0
+    
+    capital_per_year.append(capital_absolute)
     
     for i in range(max_years):
-        capital = capital_per_year[i]
-        
         interest = random.gauss(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma)
-        capital *= 1.0 + interest
-        
-        inflation = random.gauss(annual_inflation_average, annual_inflation_sigma)
-        capital /= 1.0 + inflation
+        capital_absolute *= 1.0 + interest
         
         annual_savings_rate *= 1.0 + annual_savigns_rate_increase
-        capital += annual_savings_rate
+        capital_absolute += annual_savings_rate
         
-        capital_per_year.append(capital)
+        inflation_total *= (1.0 - random.gauss(annual_inflation_average, annual_inflation_sigma))
+        
+        capital_per_year.append(capital_absolute * inflation_total)
     
     return capital_per_year
 
