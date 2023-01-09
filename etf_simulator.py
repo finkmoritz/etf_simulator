@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savigns_rate_increase):
+def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase):
     capital_per_year = []
     capital_absolute = capital_start
     annual_savings_rate = annual_savings_rate_start
@@ -15,7 +15,7 @@ def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, a
         interest = random.gauss(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma)
         capital_absolute *= 1.0 + interest
         
-        annual_savings_rate *= 1.0 + annual_savigns_rate_increase
+        annual_savings_rate *= 1.0 + annual_savings_rate_increase
         capital_absolute += annual_savings_rate
         
         inflation_total *= (1.0 - random.gauss(annual_inflation_average, annual_inflation_sigma))
@@ -33,11 +33,11 @@ def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, a
 @click.option('--capital_start', default=40000, help='Capital at the start of each simulation')
 @click.option('--max_years', default=25, help='Number of years to be simulated')
 @click.option('--annual_savings_rate_start', default=12 * 1700, help='Annual savings at the start of each simulation. This amount will be added to the portfolio at the end of each year')
-@click.option('--annual_savigns_rate_increase', default=0.0245, help='Relative increase of the annual savings. E.g. a value of 0.01 increases the annual savings by 1 percent each year')
-def main(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, number_of_simulations, capital_start, max_years, annual_savings_rate_start, annual_savigns_rate_increase):
+@click.option('--annual_savings_rate_increase', default=0.0245, help='Relative increase of the annual savings. E.g. a value of 0.01 increases the annual savings by 1 percent each year')
+def main(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, number_of_simulations, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase):
     capital_per_year_per_simulation = []
     for i in range(number_of_simulations):
-        capital_per_year = simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savigns_rate_increase)
+        capital_per_year = simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase)
         capital_per_year_per_simulation.append(capital_per_year)
         
     capital_per_year_per_simulation.sort(key=lambda x:x[max_years])
@@ -51,7 +51,7 @@ def main(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annua
     plots[0].plot(range(max_years + 1), capital_per_year_per_simulation[int(number_of_simulations / 2)], color = "orange", linestyle = "-", label = "Median case (" + "{:,}".format(int(capital_per_year_per_simulation[int(number_of_simulations / 2)][max_years])) + ")")
     plots[0].plot(range(max_years + 1), capital_per_year_per_simulation[0], color = "red", linestyle = "--", label = "Worst case (" + "{:,}".format(int(capital_per_year_per_simulation[0][max_years])) + ")")
     
-    invested_capital_per_year = [(capital_start + i * annual_savings_rate_start * pow(1.0 + annual_savigns_rate_increase, i)) * pow(1.0 - annual_inflation_average, i) for i in range(max_years + 1)]
+    invested_capital_per_year = [(capital_start + i * annual_savings_rate_start * pow(1.0 + annual_savings_rate_increase, i)) * pow(1.0 - annual_inflation_average, i) for i in range(max_years + 1)]
     plots[0].plot(range(max_years + 1), invested_capital_per_year, color = "blue", linestyle = "-.", label = "Invested (" + "{:,}".format(int(invested_capital_per_year[max_years])) + ")")
     
     plots[0].set_title("Portfolio development")
