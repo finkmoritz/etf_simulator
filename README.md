@@ -4,6 +4,11 @@ Statistical Monte-Carlo simulation of an ETF portfolio based on several modifiab
 
 ## Get started
 
+Install dependencies:
+```
+pip install -r requirements.txt
+```
+
 Execute with default parameters:
 ```
 python etf_simulator.py
