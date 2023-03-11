@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 
-def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase):
+def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_etf_ter, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase):
     capital_per_year = []
     capital_absolute = capital_start
     annual_savings_rate = annual_savings_rate_start
@@ -13,7 +13,7 @@ def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, a
     
     for i in range(max_years):
         interest = random.gauss(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma)
-        capital_absolute *= 1.0 + interest
+        capital_absolute *= 1.0 + interest - annual_etf_ter
         
         annual_savings_rate *= 1.0 + annual_savings_rate_increase
         capital_absolute += annual_savings_rate
@@ -27,6 +27,7 @@ def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, a
 @click.command()
 @click.option('--annual_etf_gross_returns_average', default=0.0785, help='Relative average of the ETF\'s annual gross returns')
 @click.option('--annual_etf_gross_returns_sigma', default=0.1452, help='Standard deviation of the relative average of the ETF\'s annual gross returns')
+@click.option('--annual_etf_ter', default=0.002, help='TER (Total expense ratio) of the ETF')
 @click.option('--annual_inflation_average', default=0.0245, help='Relative average of inflation')
 @click.option('--annual_inflation_sigma', default=0.011343, help='Standard deviation of the relative average of inflation')
 @click.option('--number_of_simulations', default=100, help='Number of simulations')
@@ -34,10 +35,10 @@ def simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, a
 @click.option('--max_years', default=25, help='Number of years to be simulated')
 @click.option('--annual_savings_rate_start', default=12 * 1700, help='Annual savings at the start of each simulation. This amount will be added to the portfolio at the end of each year')
 @click.option('--annual_savings_rate_increase', default=0.0245, help='Relative increase of the annual savings. E.g. a value of 0.01 increases the annual savings by 1 percent each year')
-def main(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, number_of_simulations, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase):
+def main(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_etf_ter, annual_inflation_average, annual_inflation_sigma, number_of_simulations, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase):
     capital_per_year_per_simulation = []
     for i in range(number_of_simulations):
-        capital_per_year = simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase)
+        capital_per_year = simulate(annual_etf_gross_returns_average, annual_etf_gross_returns_sigma, annual_etf_ter, annual_inflation_average, annual_inflation_sigma, capital_start, max_years, annual_savings_rate_start, annual_savings_rate_increase)
         capital_per_year_per_simulation.append(capital_per_year)
         
     capital_per_year_per_simulation.sort(key=lambda x:x[max_years])
